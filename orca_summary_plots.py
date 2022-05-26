@@ -26,6 +26,8 @@ for j in initials:
     fn_clim[j] = fn_0 + j + '_ds_clim.nc'
     fn_seas[j] = fn_0 + j + '_ds_seas.nc'
 
+fn_out = '/Users/erinbroatch/Documents/orca_report/figures/'
+
 ds_daily = {}
 ds_clim = {}
 ds_seas = {}
@@ -35,9 +37,6 @@ for j in initials:
     ds_seas[j] = xr.open_dataset(fn_seas[j])
 
     # Make some sample colormap plots
-
-    #North buoy data availability
-    #Make plot
     fig, axs = plt.subplots(3,1,sharex=True)
 
     #Salinity
@@ -59,26 +58,8 @@ for j in initials:
     axs[2].set_xlabel('Time')
 
     plt.suptitle(long_name[j])
-    plt.show()
-    # fig.set_size_inches(12,10)
-    # fig.savefig(fn_out+j+'_20.png')
-
-fig, axs = plt.subplots(3,1,sharex=True)
-axind = 1
-for j in initials:
-    plt.subplot(6,1,axind)
-    cs=xr.plot.pcolormesh(ds_daily[j]['sal'],'time','pressure',levels=13,cmap=cmo.haline, vmin=28, vmax=31, add_colorbar=False)
-    plt.gca().invert_yaxis()
-    if axind !=4:
-        plt.ylabel('')
-    if axind !=7:
-        plt.xlabel('')
-    plt.title(long_name[j])
-    axind = axind+1
-plt.suptitle('Salinity')
-fig.subplots_adjust(right=0.85, hspace=0.5)
-cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
-fig.colorbar(cs, cax=cbar_ax)
+    fig.set_size_inches(12,10)
+    fig.savefig(fn_out+j+'_summary.png')
 
 #Overview of data availability
 fig, axs = plt.subplots(6,1,sharex=True)
@@ -97,6 +78,8 @@ plt.suptitle('Salinity')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'sal_summary.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
@@ -114,12 +97,14 @@ plt.suptitle('Temperature')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'temp_summary.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
 for j in initials:
     plt.subplot(6,1,axind)
-    cs=xr.plot.pcolormesh(ds_daily[j]['oxy'],'time','pressure',levels=11,cmap=cmo.tempo, vmin=0, vmax=25, add_colorbar=False)
+    cs=xr.plot.pcolormesh(ds_daily[j]['oxy'],'time','pressure',levels=11,cmap=cmo.matter, vmin=0, vmax=25, add_colorbar=False)
     plt.gca().invert_yaxis()
     if axind !=4:
         plt.ylabel('')
@@ -131,6 +116,8 @@ plt.suptitle('Oxygen')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'oxy_summary.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
@@ -145,10 +132,11 @@ for j in initials:
 plt.suptitle('PAR')
 fig.supxlabel('Time')
 fig.supylabel('PAR [$\mathrm{\mu Em^{-2} s^{-1}}$]')
-
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'par_summary.png')
 
 #Climatology
 fig, axs = plt.subplots(6,1,sharex=True)
@@ -164,10 +152,11 @@ for j in initials:
     plt.title(long_name[j])
     axind = axind+1
 plt.suptitle('Salinity climatology')
-
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'sal_clim.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
@@ -185,12 +174,14 @@ plt.suptitle('Temperature climatology')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'temp_clim.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
 for j in initials:
     plt.subplot(6,1,axind)
-    cs=xr.plot.pcolormesh(ds_clim[j]['oxy'],'yearday','pressure',levels=11,cmap=cmo.tempo, vmin=0, vmax=25, add_colorbar=False)
+    cs=xr.plot.pcolormesh(ds_clim[j]['oxy'],'yearday','pressure',levels=11,cmap=cmo.matter, vmin=0, vmax=25, add_colorbar=False)
     plt.gca().invert_yaxis()
     if axind !=4:
         plt.ylabel('')
@@ -202,6 +193,8 @@ plt.suptitle('Oxygen climatology')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'oxy_clim.png')
 
 fig, axs = plt.subplots(6,1,sharex=True)
 axind = 1
@@ -219,6 +212,8 @@ plt.suptitle('PAR climatology')
 fig.subplots_adjust(right=0.85, hspace=0.5)
 cbar_ax = fig.add_axes([0.9, 0.15, 0.03, 0.7])
 fig.colorbar(cs, cax=cbar_ax)
+fig.set_size_inches(12,10)
+fig.savefig(fn_out+'par_clim.png')
 
 # Seasonal data
 fig, axs = plt.subplots(2,3,sharex=True)
@@ -240,6 +235,8 @@ for j in initials:
 plt.suptitle('Seasonal salinity profiles')
 fig.supxlabel('Salinity [psu]')
 fig.supylabel('Pressure [dbar]')
+fig.set_size_inches(10,10)
+fig.savefig(fn_out+'sal_seas.png')
 
 fig, axs = plt.subplots(2,3,sharex=True)
 axind = 1
@@ -260,6 +257,8 @@ for j in initials:
 plt.suptitle('Seasonal temperature profiles')
 fig.supxlabel('Temperature [C]')
 fig.supylabel('Pressure [dbar]')
+fig.set_size_inches(10,10)
+fig.savefig(fn_out+'temp_seas.png')
 
 fig, axs = plt.subplots(2,3,sharex=True)
 axind = 1
@@ -280,6 +279,8 @@ for j in initials:
 plt.suptitle('Seasonal oxygen profiles')
 fig.supxlabel('Oxygen [mg/L]')
 fig.supylabel('Pressure [dbar]')
+fig.set_size_inches(10,10)
+fig.savefig(fn_out+'oxy_seas.png')
 
 fig, axs = plt.subplots(2,3,sharex=True)
 axind = 1
@@ -300,6 +301,5 @@ for j in initials:
 plt.suptitle('Seasonal PAR profiles')
 fig.supxlabel('PAR [$\mathrm{\mu Em^{-2} s^{-1}}$]')
 fig.supylabel('Pressure [dbar]')
-
-#Show plots
-# plt.show()
+fig.set_size_inches(10,10)
+fig.savefig(fn_out+'par_seas.png')

@@ -29,7 +29,7 @@ long_name = {'CI':'Carr Inlet',
     'HP':'Hoodsport',
     'TW':'Twanoh'}
 
-fn_out = '/Users/erinbroatch/Documents/Research/Figures/2022_January_12/orca_map/'
+fn_out = '/Users/erinbroatch/Documents/orca_report/figures/'
 
 lonlat = {'CI': [-122.7300, 47.2800],
     'PW': [-122.3972, 47.7612],

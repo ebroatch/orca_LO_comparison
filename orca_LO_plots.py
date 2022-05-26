@@ -37,7 +37,7 @@ for j in initials:
     ds_lo[j] = xr.open_dataset(fn_lo[j])
 
 # Location to save figures
-fn_out = '/Users/erinbroatch/Documents/Research/Figures/2022_January_7/LO_orca/'
+fn_out = '/Users/erinbroatch/Documents/orca_report/figures/'
 
 for j in initials:
 

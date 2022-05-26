@@ -32,17 +32,17 @@ long_name = {'CI':'Carr Inlet',
     'TW':'Twanoh'}
 
 # ORCA adcp data
-fn_0 = '/Users/erinbroatch/Documents/Research/Data/orca_adcp/datasets/'
+fn_orca_0 = '/Users/erinbroatch/Documents/Research/Data/orca_adcp/datasets/'
 fn = {}
 for j in initials:
-    fn[j] = fn_0 + j + '_adcp_ds.nc'
+    fn[j] = fn_orca_0 + j + '_adcp_ds.nc'
 ds = {}
 for j in initials:
     ds[j] = xr.open_dataset(fn[j])
 
 fn_hourly = {}
 for j in initials:
-    fn_hourly[j] = fn_0 + j + '_adcp_ds_hourly.nc'
+    fn_hourly[j] = fn_orca_0 + j + '_adcp_ds_hourly.nc'
 ds_hourly = {}
 for j in initials:
     ds_hourly[j] = xr.open_dataset(fn_hourly[j])
@@ -58,7 +58,7 @@ for j in initials:
     ds_lo[j] = xr.open_dataset(fn_lo[j])
 
 # Location to save figures
-fn_out = '/Users/erinbroatch/Documents/Research/Figures/2022_February_8/adcp/'
+fn_out = '/Users/erinbroatch/Documents/orca_report/figures/'
 
 for j in initials:
 
@@ -160,8 +160,8 @@ for j in initials:
     up_orca = ubar_orca - ubar_orca.mean()
     vp_orca = vbar_orca - vbar_orca.mean()
     theta_orca = 0.5 * np.arctan2(2*np.nanmean(up_orca*vp_orca),(np.nanvar(up_orca)-np.nanvar(vp_orca))) #pca, might change
-    ubar_orca_rot, vbar_orca_rot = rot_vec(ubar_orca, vbar_orca, theta_orca)
-    u_orca_rot, v_orca_rot = rot_vec(ds_hourly[j]['u'],ds_hourly[j]['v'],theta_orca)
+    ubar_orca_rot, vbar_orca_rot = rot_vec(ubar_orca, vbar_orca, theta_orca + np.pi) #add pi because the orca and LO are very misaligned, it works better to rotate an extra 180degrees
+    u_orca_rot, v_orca_rot = rot_vec(ds_hourly[j]['u'],ds_hourly[j]['v'],theta_orca + np.pi)
 
     ubar_lo = ds_lo[j]['u'].sel(time=slice('2021-01-01', '2021-12-31')).mean(dim='z')
     vbar_lo = ds_lo[j]['v'].sel(time=slice('2021-01-01', '2021-12-31')).mean(dim='z')
@@ -206,7 +206,7 @@ for j in initials:
     fig.set_size_inches(10,5)
     fig.savefig(fn_out+j+'_scatter.png')
 
-    # Rotated ellipse scatter
+    #Rotated ellipse scatter
     fig, axs = plt.subplots(1,2,sharey=True)
     plt.subplot(1,2,1)
     plt.scatter(ubar_orca_rot,vbar_orca_rot,s=50,alpha=0.2,edgecolors='None')
@@ -230,7 +230,7 @@ for j in initials:
     fig.set_size_inches(10,5)
     fig.savefig(fn_out+j+'_scatter_rot.png')
 
-#u rot plot
+    #u rot plot
     fig, axs = plt.subplots(3,1,sharex=True)
     plt.subplot(3,1,1)
     cs=xr.plot.pcolormesh(u_orca_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both')
@@ -239,15 +239,15 @@ for j in initials:
     plt.xlabel('')
 
     plt.subplot(3,1,2)
-    cs=xr.plot.pcolormesh(-u_lo_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both')
+    cs=xr.plot.pcolormesh(u_lo_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both')
     plt.gca().invert_yaxis()
-    plt.title('-LO')
+    plt.title('LO')
     plt.xlabel('')
 
     plt.subplot(3,1,3)
-    cs=xr.plot.pcolormesh(u_lo_rot+u_orca_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$u [m/s]'})
+    cs=xr.plot.pcolormesh(u_lo_rot-u_orca_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$u [m/s]'})
     plt.gca().invert_yaxis()
-    plt.title('LO+ORCA')
+    plt.title('LO-ORCA')
 
     plt.xlim([dt.datetime(2021,1,1),dt.datetime(2021,12,31)])
     plt.suptitle(long_name[j]+' along-channel velocity')
@@ -265,15 +265,15 @@ for j in initials:
     plt.xlabel('')
 
     plt.subplot(3,1,2)
-    cs=xr.plot.pcolormesh(-v_lo_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both')
+    cs=xr.plot.pcolormesh(v_lo_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both')
     plt.gca().invert_yaxis()
-    plt.title('-LO')
+    plt.title('LO')
     plt.xlabel('')
 
     plt.subplot(3,1,3)
-    cs=xr.plot.pcolormesh(v_lo_rot+v_orca_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$v [m/s]'})
+    cs=xr.plot.pcolormesh(v_lo_rot-v_orca_rot,'time','depth',cmap=cmo.balance,center=0,vmin=-0.5,vmax=0.5,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$v [m/s]'})
     plt.gca().invert_yaxis()
-    plt.title('LO+ORCA')
+    plt.title('LO-ORCA')
 
     plt.xlim([dt.datetime(2021,1,1),dt.datetime(2021,12,31)])
     plt.suptitle(long_name[j]+' cross-channel velocity')
@@ -282,7 +282,7 @@ for j in initials:
     fig.set_size_inches(10,10)
     fig.savefig(fn_out+j+'_v_rot.png')
 
-#u filt plot
+    #u filt plot
     fig, axs = plt.subplots(3,1,sharex=True)
     plt.subplot(3,1,1)
     cs=xr.plot.pcolormesh(u_orca_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.3,vmax=0.3,levels=11,extend='both')
@@ -291,18 +291,18 @@ for j in initials:
     plt.xlabel('')
 
     plt.subplot(3,1,2)
-    cs=xr.plot.pcolormesh(-u_lo_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.3,vmax=0.3,levels=11,extend='both')
+    cs=xr.plot.pcolormesh(u_lo_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.3,vmax=0.3,levels=11,extend='both')
     plt.gca().invert_yaxis()
-    plt.title('-LO')
+    plt.title('LO')
     plt.xlabel('')
 
     plt.subplot(3,1,3)
-    cs=xr.plot.pcolormesh(u_lo_filt_da+u_orca_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.3,vmax=0.3,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$u [m/s]'})
+    cs=xr.plot.pcolormesh(u_lo_filt_da-u_orca_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.3,vmax=0.3,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$u [m/s]'})
     plt.gca().invert_yaxis()
-    plt.title('LO+ORCA')
+    plt.title('LO-ORCA')
 
     plt.xlim([dt.datetime(2021,1,1),dt.datetime(2021,12,31)])
-    plt.suptitle(long_name[j]+'filtered along-channel velocity')
+    plt.suptitle(long_name[j]+' filtered along-channel velocity')
     fig.subplots_adjust(right=0.85, hspace=0.5)
 
     fig.set_size_inches(10,10)
@@ -317,15 +317,15 @@ for j in initials:
     plt.xlabel('')
 
     plt.subplot(3,1,2)
-    cs=xr.plot.pcolormesh(-v_lo_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.2,vmax=0.2,levels=11,extend='both')
+    cs=xr.plot.pcolormesh(v_lo_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.2,vmax=0.2,levels=11,extend='both')
     plt.gca().invert_yaxis()
-    plt.title('-LO')
+    plt.title('LO')
     plt.xlabel('')
 
     plt.subplot(3,1,3)
-    cs=xr.plot.pcolormesh(v_lo_filt_da+v_orca_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.2,vmax=0.2,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$v [m/s]'})
+    cs=xr.plot.pcolormesh(v_lo_filt_da-v_orca_filt_da,'time','depth',cmap=cmo.balance,center=0,vmin=-0.2,vmax=0.2,levels=11,extend='both',cbar_kwargs={'label':'$\Delta$v [m/s]'})
     plt.gca().invert_yaxis()
-    plt.title('LO+ORCA')
+    plt.title('LO-ORCA')
 
     plt.xlim([dt.datetime(2021,1,1),dt.datetime(2021,12,31)])
     plt.suptitle(long_name[j]+' filtered cross-channel velocity')

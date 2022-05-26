@@ -30,7 +30,7 @@ long_name = {'CI':'Carr Inlet',
     'HP':'Hoodsport',
     'TW':'Twanoh'}
 
-fn_out = '/Users/erinbroatch/Documents/Research/Figures/2022_February_15/adcp_map/'
+fn_out = '/Users/erinbroatch/Documents/orca_report/figures/'
 
 lonlat = {'CI': [-122.7300, 47.2800],
     'PW': [-122.3972, 47.7612],
@@ -42,19 +42,6 @@ lonlat = {'CI': [-122.7300, 47.2800],
 # Set plot style
 plt.close('all')
 plt.style.use('seaborn-darkgrid')
-
-# def dar(ax):
-#     """
-#     Fixes the plot aspect ratio to be locally Cartesian.
-#     """
-#     yl = ax.get_ylim()
-#     yav = (yl[0] + yl[1])/2
-#     ax.set_aspect(1/np.sin(np.pi*yav/180))
-
-# def add_coast(ax, dir0, color='k'):
-#     fn = dir0 + 'coast/coast_pnw.p'
-#     C = pd.read_pickle(fn)
-#     ax.plot(C['lon'].values, C['lat'].values, '-', color=color, linewidth=0.5)
 
 # Get data for bathy map
 fn='/Users/erinbroatch/Documents/Research/Output/2017_01_19_1900.nc'
