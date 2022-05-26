@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import cmocean.cm as cmo
 import seawater as sw
 
-initials = ['CI', 'PW', 'NB', 'DB', 'HP', 'TW'] #ADD NB DATA
+initials = ['CI', 'PW', 'NB', 'DB', 'HP', 'TW']
 
 long_name = {'CI':'Carr Inlet',
     'PW':'Point Wells',
